@@ -1,0 +1,99 @@
+body {
+    background-color: black;
+  }
+  
+  h1 {
+    color: blue;
+    font-size: 300%;
+    font-family: Papyrus, fantasy;
+    text-align: center;
+    border-bottom-style: solid;
+    border-color:black;
+  }
+  
+  h2 {
+    color: blue;
+    font-size: 150%;
+    font-family: Georgia;
+    text-align: center;
+  }
+  
+  p {
+    margin: auto;
+    width: 50%;
+    color: red;
+  }
+  
+  button {
+
+    background-color: black; 
+    border: 1px solid white;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 85%;
+    cursor: pointer;
+    width: 100px;
+    display: block;
+    margin: auto;
+    width: 50%;
+  }
+  
+  button:hover {
+    background-color: black;
+    color: white;
+  }
+  
+  
+  use {
+    transition: 0.4s;
+    cursor: pointer;
+    fill: transparent;
+  }
+  .pod-wrap use:hover {
+    fill: #000000 !important;
+  }
+
+  svg {
+    width: 600px;
+    height: 600px;
+    flex: 1;
+  }
+  
+
+  .column_left {
+    float: left;
+    width: 10%;
+    padding: 10px;
+  }
+
+  .column_middle {
+    float: left;
+    width: 75%;
+    padding: 10px;
+    border-right-style: solid;
+    border-left-style: solid;
+    border-color:white;
+    margin: auto;
+  }
+
+  .column_right {
+    float:left;
+    width: 15%;
+    padding: 10px;   
+  }
+
+  .columns{
+    height: 1000px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .map{
+    margin: auto;
+    width: 70%;  
+  }

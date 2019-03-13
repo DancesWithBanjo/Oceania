@@ -1,0 +1,56 @@
+body {
+  background-color: black;
+}
+
+h1 {
+  color: blue;
+  font-size: 300%;
+  font-family: Papyrus, fantasy;
+  text-align: center;
+}
+
+h2 {
+  color: blue;
+  font-size: 100%;
+  font-family: Georgia;
+  text-align: right;
+}
+
+p {
+  color: red;
+}
+
+button {
+  border-radius: 4px;
+  padding-bottom: 3px;
+}
+
+
+use {
+  transition: 0.4s;
+  cursor: pointer;
+  fill: transparent;
+}
+.pod-wrap use:hover {
+  fill: #000000 !important;
+}
+svg {
+  width: 600px;
+  flex: 1;
+}
+body1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  height: 100vh;
+  font-weight: 700;
+  font-family: sans-serif;
+}
+
+nav {
+  float: right;
+  width: 30%;
+  padding: 10px;
+}
