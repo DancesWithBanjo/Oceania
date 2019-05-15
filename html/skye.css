@@ -1,0 +1,103 @@
+body {
+  background-color: #6495ED;
+}
+.panel{
+  background-color: #191970;
+  margin: auto;
+}
+
+h1 {
+  color: white;
+  font-size: 300%;
+  /*font-family: Papyrus, fantasy;*/
+  text-align: center;
+}
+
+h2 {
+  color: white;
+  font-size: 150%;
+  font-family: Georgia;
+  text-align: center;
+}
+
+p {
+  margin: auto;
+  width: 50%;
+  color: red;
+}
+
+button {
+
+  background-color: #191970;
+  border: 1px solid white;
+  color: white;
+  padding: 10px;
+  /* 
+   text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1vw;
+  cursor: pointer;
+  width: 100px;
+  display: block;
+  margin: auto;
+  width: 50%;
+ */
+}
+
+button:hover {
+  background-color:white;
+  color: black;
+}
+
+
+use {
+  transition: 0.4s;
+  cursor: pointer;
+  fill: transparent;
+}
+
+.pod-wrap{
+  stroke:#F5F5F5 ;
+  stroke-width: 1;
+}
+
+.pod-wrap use:hover {
+  
+  fill: #000000 !important;
+  /*
+  z-index: 100 !important;
+  position:relative;
+  
+  stroke-width: 5;
+  stroke: black;
+  */
+}
+
+svg {
+  width: 80vw;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+/*
+.rows{
+  background-color:#6495ED;
+  border-top-style: solid;
+  border-color:white;
+}
+*/
+.col-md-12{
+  text-align: center;
+  /*
+  border-style: solid;
+  border-color:white;
+  */
+}
+.button1{
+  margin-bottom: 15px;
+}
+.button2{
+  margin-bottom: 15px;
+}

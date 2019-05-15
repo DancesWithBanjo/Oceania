@@ -1,36 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html land="en">
 <head>
-<style>
-.column {
-  float: left;
-  width: 33%;
-}
-
-/* Column CSS */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-use {
-  transition: 0.4s;
-  cursor: pointer;
-  fill: transparent;
-}
-.pod-wrap use:hover {
-  fill: #000000 !important;
-}
-svg {
-    width: 30vw;
-    height: 30vw;
-    display: inline-flex;
-    margin: auto;
-  }
-
-</style>
-<link rel="stylesheet" href="style.css">
-<title>God Mode</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+  <link rel="stylesheet" href="godcss.css">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <title>GodMode</title>
 
   <script type="text/JavaScript">
     function showMessage(){
@@ -59,20 +34,17 @@ svg {
 
     // Check if the user is logged in, if not then redirect him to login page
     if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true && $_SESSION["username"] == "godmode"){
-      echo "you are god";
+      //echo "you are god";
     } else {
       header("location: login.php");
       echo "you arent god!";
       exit;
     }
     require_once "config.php";
-
   ?>
-
-
-
 </head>
 
+<!-- Godmode php -->
 <?php
   $servername = "localhost";
   $username = "root";
@@ -98,9 +70,10 @@ svg {
   	$g = $_POST['growthRate'];
   	$o = $_POST['giveableOil'];
 	$sc = $_POST['startCredits'];
+	$sm = $_POST['startMil'];
 
     // Prepare and attempt new data writing
-  	$stmt = "UPDATE states SET military = ".$m.", pubApproval =".$p.", credits =".$e.", research ='".$r."', growthRate = ".$g.", FTbonus = ".$f.", giveableOil = ".$o.", startCredits = ".$sc." WHERE name ='".$n."';";
+  	$stmt = "UPDATE states SET military = ".$m.", pubApproval =".$p.", credits =".$e.", research ='".$r."', growthRate = ".$g.", FTbonus = ".$f.", giveableOil = ".$o.", startCredits = ".$sc.", startMil = ".$sm." WHERE name ='".$n."';";
   	if (mysqli_query($conn, $stmt)) {
       echo "Record updated successfully!";
   	} else {
@@ -149,6 +122,17 @@ svg {
       	echo "Error updating record.";
       }
   }
+
+if(isset($_POST['resGW']))
+{
+	$stmt = "UPDATE globalWarming set investment = 0;";
+	if (mysqli_query($conn, $stmt)) {
+        echo "Record updated successfully!";
+      } else {
+        echo "Error updating record.";
+      }
+
+}
 
   if (isset($_POST['inputNews'])) {
     // Prepare the SQL to prevent vulnerabilities
@@ -242,73 +226,71 @@ if(isset($_POST['warEvent'])) {
 
 }
 
-
 if(isset($_POST['triggerTurn'])){
+
+	$invaded = $_POST['invaded'];
+
+	$queryTurn = "select * from turn;";
+	$turnResult = mysqli_query($conn, $queryTurn);
+	$turnArray = mysqli_fetch_row($turnResult);
 
 	$query = "select * from allocations;";
         $allocResult = mysqli_query($conn, $query);
-        while($array=mysqli_fetch_row($allocResult)){
 
+	$gwQuery = "select * from globalWarming;";
+	$gwResult = mysqli_query($conn, $gwQuery);
+	$gwArray = mysqli_fetch_row($gwResult);
+	$gw = $gwArray[0];
+	while($array = mysqli_fetch_row($allocResult)){
 		$q2 = "select * from states where name = '".$array[0]."';";
 		$stateResult = mysqli_query($conn, $q2);
 		$stateArray = mysqli_fetch_row($stateResult);
 
-		$endowment = $_POST[$array[0]];
-		$econ = $stateArray[3]/1000;
-		$mil = $stateArray[1]/100;
-		$oilNeeded = $econ + $mil;
-		$delta = $array[5];
-		$end = $endowment + $delta;
-		$budPerc = $array[1]/$stateArray[3];
-		$shortfall = $oilNeeded - $end;
-		if($shortfall < 0){
-			$shortfall = 0;
-		}
 
-		if($shortfall == 0){
-			$oilSlowdown = 0;
-		}
-		else{
-			$oilSlowdown = ($econ/($oilNeeded * $shortfall))/100;
-		}
-		$actualGR = ($stateArray[5] + ($budPerc/10)+ $stateArray[6] - $oilSlowdown);
+		$m = $stateArray[9];
+		$e = $stateArray[8]; //starting economy size
+		$b = $stateArray[5]; //baseline growth rate %
+		$t = $stateArray[6]; //free trade bonus %
 
-		if($oilSlowdown != 0){
-			$nextBudget = round($stateArray[3]*(1+$actualGR));
-		}
-		else{
-			$nextBudget = round(($stateArray[3] * (1+$stateArray[5] + $stateArray[6])) + ($stateArray[3]*($budPerc/10)));
-		}
+		$gw = $gw + $array[6];
+		$oilNeeded = round(($e / 1000) + ($m / 100)); //
+		$oilObtained = $_POST[$array[0]];
+		$oilObtained = $oilObtained + $array[5];
+		//echo $oilObtained;
+		$shortfall = $oilNeeded - $oilObtained;
+		$s = $shortfall/$oilNeeded;
+		$s = $s/10;
+		//echo "-".$array[1]."-";
+		$i = ($array[1]/$e)/10;
+		//echo $b."  ".$t."  ".$i."  ".$s;
+		$perc = $b + $t + $i - $s;
+		$perc = $perc/100;
+		$nextBudget = round($e*(1+$perc)); //
+		//echo $nextBudget;
 		//next budget is set
-
-		$q3 = "select * from turn;";
-		$turnResult = mysqli_query($conn, $q3);
-		$turnArray = mysqli_fetch_row($turnResult);
-
-		$milPerc = $array[2]/$stateArray[1];
-
-		if($turnArray[0] == 0){
-			$milRequest = $stateArray[1] * .9 + $array[2];
+		$d = 10;
+		if($array[0]=='Highlands' && $invaded==1)
+		{
+			$d = 0;
 		}
-		else{
-			$oilDepr = ($stateArray[1]/($oilNeeded * $shortfall))/100;
-			if ($shortfall == 0){
-				$oilDepr = 0;
-			}
-			$milDepr = .1 + $oilDepr;
-                	$milRequest = $stateArray[1] * (.9 - $milDepr) * $milPerc * $stateArray[3];
+
+		$r = $array[2];
+
+		$attemptedMil = round($m*(1-($d/100)-($s/100)) + $r); //
+		if($attemptedMil > ($m*1.25))
+		{
+			$attemptedMil = round($m*1.25); //
 		}
-		$milMax = 1.5 * $stateArray[1];
-		$milDdwt = $array[2] - $milMax;
-		$nextMil = round($milMax - $milDdwt);
+
 		//query here
-		$stmt = "UPDATE states set credits =".$nextBudget.", startCredits =".$nextBudget.", military =".$nextMil." where name = '".$array[0]."';";
+		$stmt = "UPDATE states set credits =".$nextBudget.", startCredits =".$nextBudget.", military =".$attemptedMil.", startMil=".$attemptedMil." where name = '".$array[0]."';";
 		//echo $stmt;
 		if (mysqli_query($conn, $stmt)) {
      			echo "Record updated successfully!";
     		} else {
       			echo "Error updating record.";
 		}
+
 	}
 	$nextTurn = $turnArray[0] + 1;
         $stmt = "UPDATE turn set number =".$nextTurn.";";
@@ -317,20 +299,32 @@ if(isset($_POST['triggerTurn'])){
         } else {
                 echo "Error updating record.";
         }
+
+	$stmt = "update globalWarming set investment = ".$gw." ;";
+	if (mysqli_query($conn, $stmt)) {
+                echo "Record updated successfully!";
+        } else {
+                echo "Error updating record.";
+        }
+
 }
 
 ?>
 
-
-<h1> God Mode</h1>
-<hr>
-
-<!-- Try using an aside tag to create a vert line -->
-<div class = "row">
-  <div class = "column">
-
+<body>
+<div class="panel panel-default">
+  <h1>CAK God Mode</h1>
+</div>
+<div class="col-md-12" id="row0" style="text-align: center;">
+    <a href="register.php" class="btn btn-default">REGISTER</a>
+    <a href="login.php" class="btn btn-default">LOGIN</a>
+		<a href ="reset_password.php" class="btn btn-default">RESET PASSWORD</a>
+		<a href = "logout.php" class="btn btn-default"> LOGOUT</a>
+</div>
     <!-- Create Table for each nations values -->
-    <table border="1">
+<div class="col-md-12" id="row1" >
+<div class="col-md-9" id="nationValueTable" >
+    <table class="table table-striped" border="3">
     <tr>
     <th> Name </th>
     <th> Military </th>
@@ -341,6 +335,7 @@ if(isset($_POST['triggerTurn'])){
     <th> Free Trade Bonus</th>
     <th> Giveable Oil </th>
     <th> Credits at Start of Turn
+    <th> Military at Start of turn
     </tr>
 
                 <?php
@@ -358,19 +353,17 @@ if(isset($_POST['triggerTurn'])){
                     echo '<td>' . $array[6] . '</td>';
     		    echo '<td>' . $array[7] . '</td>';
                     echo '<td>' . $array[8] . '</td>';
+		    echo '<td>' . $array[9] . '</td>';
 		    echo '</tr>';
                   }
 
                   echo '</table>';
                 ?>
 
-<br>
-<br>
-
-<!-- Display nation value manipulation form -->
-<a>Select the nation whose values you want to alter</a>
+  <!-- Display nation value manipulation form -->
+<p>Select the nation here:</p>
 	<!-- Need to specify action type -->
-		<form action="godmode.php" method = "post">
+		<form action="skyegod.php" method = "post">
   		<input type="radio" name="nation" value="Taiga"> Taiga<br>
   		<input type="radio" name="nation" value="Boreala"> Boreala<br>
   		<input type="radio" name="nation" value="Highlands"> The Highlands<br>
@@ -381,8 +374,10 @@ if(isset($_POST['triggerTurn'])){
   		<input type="radio" name="nation" value="Desicca"> Desicca<br>
   		<input type="submit" value = "submit">
 		</form>
-	  	<br>
+</div>
 
+ <div class="col-md-3" >
+ <p>Change value here (select nation first):</p>
 <?php
   $nation = $_POST['nation']; //get the nation
   $sql = "SELECT * from states WHERE name = '".$nation."';"; //use it to create the sql $
@@ -390,7 +385,7 @@ if(isset($_POST['triggerTurn'])){
   $row = mysqli_fetch_array($stateInfo, MYSQLI_ASSOC);
 
     // Display manipulation forms
-  	echo '<form action ="godmode.php" method = "post">';
+  	echo '<form action ="skyegod.php" method = "post">';
   	echo 'Input Military modification:<br>';
   	echo '<input type="number" name="military" value = ' .$row['military']. '><br>';
   	echo 'Input Public Opinion modification:<br>';
@@ -407,163 +402,72 @@ if(isset($_POST['triggerTurn'])){
     	echo '<input type="number" name="giveableOil" value = ' .$row['giveableOil']. '><br>';
         echo 'Input Credits at Turn Start modification:<br>';
         echo '<input type="number" name="startCredits" value = ' .$row['startCredits']. '><br>';
+	echo 'Input Military at Turn Start modification:<br>';
+        echo '<input type="number" name="startMil" value = ' .$row['startMil']. '><br>';
 	echo '<input type = "hidden" name = "nation" value = '.$nation. '>';
 	echo '<input type="submit" value="Submit" name = "updateStates">';
 	echo '</form>';
-
 ?>
-
-		<br>
-<h2>Reset Deltas to 0:</h2>
-<form action ="godmode.php" method = "post">
-<input type="submit" value="Reset" name = "resDeltas">
-</form>
+</div>
+</div>
 
 
+<div class="col-md-12" id="row2" >
+  <div class="col-md-9" >
+  <?php
+    //calls map.php with when clicked on returns hexID
+    include 'map.php';
+    //echo "  <use xlink:href=$oil transform='translate($xstart, $ystart)' onclick='getHexID($hid)' style='fill: $color'/>" ;
+  ?>
+  </div>
 
-<h2>Reset turn to 0:</h2>
-<form action = "godmode.php" method = "post">
-<input type = "submit" value="Reset" name = "resTurn">
-</form>
-<?php
-$query = "select * from turn;";
-$result = mysqli_query($conn, $query);
-$array=mysqli_fetch_row($result);
-echo "It is turn: ".$array[0];
-?>
+  <div class="col-md-3" >
+  <?php
+    // Form for hex/map changes
 
-	</div>
-	<div class = "column"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-	<h2 align='center'>OCEANIA FROM ABOVE</h2>
-		<?php
-
-		$result = mysqli_query($conn, "SELECT * FROM hexes;");
-
-		//echo "<div class='content_section floating_element'>";
-		echo "   <svg viewBox='0 0 1000 1000'>";
-		echo "  <defs>";
-		echo "     <g id='pod'>";
-		echo "       <polygon stroke='white' stroke-width='1' points='-9,5 -9,-5 0,-10 9,-5 9,5 0,10'/>";
-		echo "     </g>";
-		echo "     <g id='oilPod1'>";
-		echo "       <polygon stroke='white' stroke-width='1' points='-9,5 -9,-5 0,-10 9,-5 9,5 0,10'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='7,0 7,-3'/>";
-		echo "     </g>";
-
-		echo "     <g id='oilPod2'>";
-		echo "       <polygon stroke='white' stroke-width='1' points='-9,5 -9,-5 0,-10 9,-5 9,5 0,10'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='7,0 7,-3'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='4,0 4,-3'/>";
-		echo "     </g>";
-
-		echo "     <g id='oilPod3'>";
-		echo "       <polygon stroke='white' stroke-width='1' points='-9,5 -9,-5 0,-10 9,-5 9,5 0,10'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='7,0 7,-3'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='4,0 4,-3'/>";
-		echo "       <polygon stroke='black' stroke-width='2' points='1,0 1,-3'/>";
-		echo "     </g>";
-
-		echo "  </defs>";
-		echo "<g class='pod-wrap'>";
-
-		$ystart = 15;
-		$xstart = 10;
-		$xind = 0;
-		//$result = mysqli_query($conn, "SELECT * FROM hexes;");
-  while ($row = mysqli_fetch_assoc($result))
-  {
-
-          if($xind == 55)
-          {
-
-                  if($xstart == 1000)
-                  {
-                          $xstart = 18.5;
-                  }
-                  else
-                  {
-                          $xstart = 10;
-                  }
-                  $xind =0;
-                  $ystart = $ystart + 15;
-          }
-
-          if($row["state"] == 'ocean')
-          {
-                  $color = "#d2fff7";
-          }
-          if($row["state"] == 'ice')
-          {
-                  $color = "#ffffff";
-          }
-          if($row["state"] == 'Taiga')
-          {
-                  $color = "#92c4d1";
-          }
-          if($row["state"] == 'Boreala')
-          {
-                  $color = "#ecbf84";
-          }
-          if($row["state"] == 'Highlands')
-          {
-                  $color = "#96a2e8";
-          }
-          if($row["state"] == 'Archipelagia')
-          {
-                  $color = "#ef81cb";
-          }
-    	  if($row["state"] == 'Riparia')
-          {
-                  $color = "#d9d3ea";
-          }
-          if($row["state"] == 'League')
-          {
-                  $color = "#e8fa8c";
-          }
-          if($row["state"] == 'Desicca')
-          {
-                  $color = "#d1bc8b";
-          }
-          if($row["state"] == 'frozen isles')
-          {
-                  $color = "#e8e5e7";
-          }
-          if($row["state"] == 'Arborea')
-          {
-                  $color = "#75d59d";
-          }
-          if($row["numOil"] == 0)
-          {
-                  $oil = '#pod';
-          }
-          if($row["numOil"] == 1)
-          {
-                  $oil = '#oilPod1';
-          }
-          if($row["numOil"] == 2)
-          {
-                  $oil = '#oilPod2';
-          }
-          if($row["numOil"] == 3)
-          {
-                  $oil = '#oilPod3';
-          }
-
-	  $hid = $row["hexID"];
-          echo "  <use xlink:href=$oil transform='translate($xstart, $ystart)' onclick='getHexID($hid)' style='fill: $color'/>" ;
-          $xstart = $xstart + 18;
-          $xind = $xind +1;
-
-  }
+    echo '<h2>Edit Hexes</h2>';
+    echo '<form action ="skyegod.php" method = "post">';
+  		echo 'hexID to modify:<br>';
+   		echo '<input id="hexID" type="number" name="hexID"<br><br>';
+  		echo 'SELECT STATE FOR HEX TO BECOME: <br>';
+  		echo '<input type="radio" name="nation" value="Taiga"> Taiga<br>';
+      echo '<input type="radio" name="nation" value="Boreala"> Boreala<br>';
+      echo '<input type="radio" name="nation" value="Highlands"> The Highlands<br>';
+      echo '<input type="radio" name="nation" value="Archipelagia"> Archipelagia<br>';
+      echo '<input type="radio" name="nation" value="League"> The League<br>';
+      echo '<input type="radio" name="nation" value="Riparia"> Riparia<br>';
+      echo '<input type="radio" name="nation" value="Arborea"> Arborea<br>';
+      echo '<input type="radio" name="nation" value="Desicca"> Desicca<br>';
+      echo '<input type="radio" name="nation" value="ocean"> Ocean<br>';
+      echo '<input type="radio" name="nation" value="ice"> Ice<br>';
+      echo '<input type="radio" name="nation" value="frozen isles"> Frozen Isles<br>';
+      echo 'Change Nuked Status (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="nuked" value="0"><br>';
+      echo 'Change Mountain Status (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="mountain" value="0"><br>';
+      echo 'Change City Status (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="city" value="0"><br>';
+      echo 'Change Capital Status (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="capital" value="0"><br>';
+      echo 'Input Coal modification (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="numCoal" value="0"><br>';
+      echo 'Input Fish modification (1 for Yes, 0 for No):<br>';
+      echo '<input type="number" name="numFish" value="0"><br>';
+      echo 'Input Natural Gas modification (0-3):<br>';
+      echo '<input type="number" name="numGas" value="0"><br>';
+      echo 'Input Oil modification (0-3):<br>';
+      echo '<input type="number" name="numOil" value="0"><br>';
+      echo '<input type="submit" value="Submit" name = "updateHexes">';
+    echo '</form>';
+    ?>
+  </div>
+</div>
 
 
-
-  echo "</g>";
-  echo "</svg>";
-
-?>
-		<h2>War</h2>
-                <form action="godmode.php" method = "post">
+  <div class="col-md-6" id="war-reset" >
+  <div id="war" >
+  <h2>War</h2>
+                <form action="skyegod.php" method = "post">
 		Attacker:<br>
                 <input type="radio" name="nationA" value="Taiga"> Taiga<br>
                 <input type="radio" name="nationA" value="Boreala"> Boreala<br>
@@ -594,87 +498,42 @@ echo "It is turn: ".$array[0];
                 <input type="number" name = "mHexes"><br>
                 <input type="submit" name="warEvent" value = "submit">
                 </form>
+</div>
 
+<div id="reset" >
+<h2>Reset Deltas to 0:</h2>
+<form action ="skyegod.php" method = "post">
+<input type="submit" value="Reset" name = "resDeltas">
+</form>
 
-
-
+<h2>Reset turn to 0:</h2>
+<form action = "skyegod.php" method = "post">
+<input type = "submit" value="Reset" name = "resTurn">
+</form>
 <?php
-
-echo '</div>';
-echo '<div class = "column">';
-
-
-    // Form for hex/map changes
-
-    echo '<h2>Edit Hexes</h2>';
-    echo '<form action ="godmode.php" method = "post">';
-  		echo 'hexID to modify:<br>';
-   		echo '<input id="hexID" type="number" name="hexID"<br><br>';
-  		echo 'State for hex to become: <br>';
-  		echo '<input type="radio" name="nation" value="Taiga"> Taiga<br>';
-      echo '<input type="radio" name="nation" value="Boreala"> Boreala<br>';
-      echo '<input type="radio" name="nation" value="Highlands"> The Highlands<br>';
-      echo '<input type="radio" name="nation" value="Archipelagia"> Archipelagia<br>';
-      echo '<input type="radio" name="nation" value="League"> The League<br>';
-      echo '<input type="radio" name="nation" value="Riparia"> Riparia<br>';
-      echo '<input type="radio" name="nation" value="Arborea"> Arborea<br>';
-      echo '<input type="radio" name="nation" value="Desicca"> Desicca<br>';
-      echo '<input type="radio" name="nation" value="ocean"> Ocean<br>';
-      echo '<input type="radio" name="nation" value="ice"> Ice<br>';
-      echo '<input type="radio" name="nation" value="frozen isles"> Frozen Isles<br>';
-      echo 'Change Nuked Status(1 for Yes, 0 for No):<br>';
-      echo '<input type="number" name="nuked" value="0"><br>';
-      echo 'Change Mountain Status(1 for Yes, 0 for No):<br>';
-      echo '<input type="number" name="mountain" value="0"><br>';
-      echo 'Change City Status(1 for Yes, 0 for No):<br>';
-      echo '<input type="number" name="city" value="0"><br>';
-      echo 'Change Capital Status(1 for Yes, 0 for No):<br>';
-      echo '<input type="number" name="capital" value="0"><br>';
-      echo 'Input Oil modification:<br>';
-      echo '<input type="number" name="numOil" value="0"><br>';
-      echo 'Input Fish modification:<br>';
-      echo '<input type="number" name="numFish" value="0"><br>';
-      echo 'Input Natural Gas modification:<br>';
-      echo '<input type="number" name="numGas" value="0"><br>';
-      echo 'Input Coal modification:<br>';
-      echo '<input type="number" name="numCoal" value="0"><br>';
-      echo '<input type="submit" value="Submit" name = "updateHexes">';
-    echo '</form>';
-
-
-?>
-
-
-
-    <!-- News log updates/input section -->
-    <br>
-    <h2>News</h2>
-    <form action ="godmode.php" method = "post">
-    <input type = "text" value = "news..." name = "news">
-    <input type="submit" value="Submit" name = "inputNews">
-    </form>
-    <br>
-
-<?php
-
-$query = "select * from news;";
+$query = "select * from turn;";
 $result = mysqli_query($conn, $query);
-while($array=mysqli_fetch_row($result))
-{
-	echo $array[0]." : ".$array[1];
-	echo "<form action = 'godmode.php' method = 'POST'>";
-	echo "<input type = 'hidden' name='time' value ='".$array[0]."'>";
-	echo "<input type = 'submit' value='Delete' name = 'delNews'>";
-	echo "<br><br>";
-}
+$array=mysqli_fetch_row($result);
 
+$query2 = "select * from globalWarming;";
+$result2 = mysqli_query($conn, $query2);
+$array=mysqli_fetch_row($result2);
+
+echo "It is turn: ".$array[0];
+echo "<br>";
+echo "<h2> The people have donated a total of ".$array[0]." credits to global Warming abatement. </h2>";
 ?>
+<form action ="skyegod.php" method = "post">
+<input type="submit" value="Reset" name = "resGW">
+</form>
 
 
+  </div>
+</div>
 
-
-  <!-- Display current allocation requests for each nation -->
-	<h2>Current Allocation Requests</h2>
+    <div class="col-md-6" id="turn" >
+   <!-- Display current allocation requests for each nation -->
+   <h2>Current Allocation Requests</h2>
 	<?php
                 $query = "select * from allocations;";
                 $result = mysqli_query($conn, $query);
@@ -691,35 +550,52 @@ while($array=mysqli_fetch_row($result))
 	?>
 	<br>
 	<br>
-	<h2>Input endowments and trigger turn flip</h2>
-  	<form action ="godmode.php" method = "post">
-  	   Input endowment for Arborea:
-      <input type="number" name="Arborea" value="0"><br>
+      <h2>Input endowments and trigger turn flip</h2>
+      <form action ="skyegod.php" method = "post">
+      Input endowment for Arborea:
+      <input type="number" name="Arborea" value=0><br>
       Input endowment for Archipelagia:
-      <input type="number" name="Archipelagia" value="0"><br>
+      <input type="number" name="Archipelagia" value=0><br>
       Input endowment for Boreala:
-      <input type="number" name="Boreala" value="0"><br>
+      <input type="number" name="Boreala" value=0><br>
       Input endowment for Desicca:
-      <input type="number" name="Desicca" value="0"><br>
+      <input type="number" name="Desicca" value=0><br>
       Input endowment for Highlands:
-      <input type="number" name="Highlands" value="0"><br>
+      <input type="number" name="Highlands" value=0><br>
+      Has Highlands been invaded? (1 for yes, 0 for no)
+      <input type="number" name="invaded" value=0><br>
       Input endowment for League:
-      <input type="number" name="League" value="0"><br>
+      <input type="number" name="League" value=0><br>
       Input endowment for Riparia:
-      <input type="number" name="Riparia" value="0"><br>
+      <input type="number" name="Riparia" value=0><br>
       Input endowment for Taiga:
-      <input type="number" name="Taiga" value="0"><br>
-      <input type="submit" value="Trigger Turn" name = "triggerTurn">
+      <input type="number" name="Taiga" value=0><br>
+      <input type="submit" name = "triggerTurn" value="Trigger Turn">
+      </form>
+    </div>
+
+    <div class="col-md-12" id="news" >
+          <!-- News log updates/input section -->
+
+    <h2>News</h2>
+    <form action ="skyegod.php" method = "post">
+    <input type = "text" value = "news..." name = "news">
+    <input type="submit" value="Submit" name = "inputNews">
     </form>
+    <?php
 
+$query = "select * from news order by date desc;";
+$result = mysqli_query($conn, $query);
+while($array=mysqli_fetch_row($result))
+{
+	echo $array[0]." : ".$array[1];
+	echo "<form action = 'skyegod.php' method = 'POST'>";
+	echo "<input type = 'hidden' name='time' value ='".$array[0]."'>";
+	echo "<input type = 'submit' value='Delete' name = 'delNews'>";
+	echo "<br><br>";
+}
 
-		<?php mysqli_free_result($result); ?>
-		<?php mysqli_close($conn); ?>
-		<br>
-		<br>
-		<a href="register.php" class"btn btn-default">REGISTER</a>
-    <a href="login.php" class"btn btn-default">LOGIN</a>
-		<a href ="reset_password.php" class"btn btn-default">RESET PASSWORD</a>
-		<a href = "logout.php" class"btn btn-default"> LOGOUT</a>
-	</div>
-</div>
+?>
+    </div>
+</body>
+</html>

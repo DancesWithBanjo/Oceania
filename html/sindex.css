@@ -1,77 +1,89 @@
 body {
-    background-color: black;
+    background-color: #6495ED;
   }
-  
+
   h1 {
-    color: blue;
+    color: black;
     font-size: 300%;
     font-family: Papyrus, fantasy;
     text-align: center;
     border-bottom-style: solid;
-    border-color:black;
+    border-color:white;
   }
-  
+
   h2 {
-    color: blue;
+    color: black;
     font-size: 150%;
     font-family: Georgia;
     text-align: center;
   }
-  
+
   p {
     margin: auto;
     width: 50%;
     color: red;
   }
-  
+
   button {
 
-    background-color: black; 
+    background-color: black;
     border: 1px solid white;
     color: white;
     padding: 10px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 85%;
+    font-size: 1vw;
     cursor: pointer;
     width: 100px;
     display: block;
     margin: auto;
     width: 50%;
   }
-  
+
   button:hover {
-    background-color: black;
-    color: white;
+    background-color:white;
+    color: black;
   }
-  
-  
+
+
   use {
     transition: 0.4s;
     cursor: pointer;
     fill: transparent;
   }
+  .pod-wrap{
+    stroke:#F5F5F5 ;
+    stroke-width: 1;
+  }
+
   .pod-wrap use:hover {
-    fill: #000000 !important;
+    stroke-width: 5;
+    stroke: black;
+  }
+
+  .pod:hover {
+    pointer-events: visible;
+    stroke:black !important;
   }
 
   svg {
-    width: 600px;
-    height: 600px;
-    flex: 1;
+    width: 60vw;
+    height: 60vw;
+    display: block;
+    margin: auto;
   }
-  
+
 
   .column_left {
     float: left;
-    width: 10%;
+    width: 20%;
     padding: 10px;
   }
 
   .column_middle {
     float: left;
-    width: 75%;
+    width: 65%;
     padding: 10px;
     border-right-style: solid;
     border-left-style: solid;
@@ -82,7 +94,7 @@ body {
   .column_right {
     float:left;
     width: 15%;
-    padding: 10px;   
+    padding: 10px;
   }
 
   .columns{
@@ -92,8 +104,12 @@ body {
   * {
     box-sizing: border-box;
   }
-
+/*
   .map{
     margin: auto;
-    width: 70%;  
+    width: 70%;
+  } */
+
+  textarea {
+    resize: none;
   }

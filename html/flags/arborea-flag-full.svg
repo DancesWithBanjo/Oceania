@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="600"
+   height="400"
+   viewBox="0 0 158.75 105.83333"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="arborea-flag-full.svg">
+  <title
+     id="title2386">Redesigned Flag of Minnesota</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="37.90496"
+     inkscape:cy="-281.67807"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1260"
+     inkscape:window-height="896"
+     inkscape:window-x="173"
+     inkscape:window-y="62"
+     inkscape:window-maximized="0"
+     objecttolerance="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:snap-global="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Redesigned Flag of Minnesota</dc:title>
+        <dc:date>December 4, 2017</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Adam A. Smith</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-191.16668)">
+    <rect
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#008020;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5291667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       id="rect26"
+       width="158.75"
+       height="105.83334"
+       x="1.2500001e-06"
+       y="191.16669" />
+    <path
+       id="rect207-3-3"
+       style="color:#000000;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5291667;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       d="M 39.687498,191.16668 V 297.00001 H 119.0625 V 191.16668 Z"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
+    <g
+       id="g1068-5"
+       transform="translate(142.22284,17.680666)">
+      <path
+         sodipodi:nodetypes="cccc"
+         id="path86-3-6"
+         d="m -67.116118,244.45219 v 21.63799 h 8.536559 v -21.63799"
+         style="fill:#2f0d0d;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.69437599"
+         inkscape:connector-curvature="0" />
+      <path
+         sodipodi:nodetypes="ccccccccccccccccccccccccccccc"
+         id="path86-5-2"
+         d="m -62.848892,186.71518 -7.530779,15.41965 4.748948,-2.80602 -9.883091,14.55249 5.657053,-3.09705 -10.791196,14.84353 6.565159,-3.3881 -11.699302,15.13458 7.473264,-3.67913 -12.607407,15.42561 9.968869,-3.97018 -4.33104,5.13436 12.942173,-5.27086 -2.444127,3.76551 11.932528,-2.87162 11.932527,2.87162 -2.446237,-3.76551 12.942173,5.27086 -4.331039,-5.13436 9.970977,3.97018 -12.609515,-15.42561 7.474846,3.67913 -11.700884,-15.13458 6.566216,3.3881 -10.792254,-14.84353 5.657585,3.09705 -9.883623,-14.55249 4.748954,2.80602 -7.530778,-15.41965"
+         style="fill:#008020;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.53481382"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
